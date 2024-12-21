@@ -8,7 +8,6 @@ namespace BetterGenshinImpact.GameTask.AutoFight.Script;
 public class Method
 {
     public static readonly Method Skill = new(["skill", "e"]);
-    public static readonly Method LongSkill = new(["longskill", "le"]);
     public static readonly Method Burst = new(["burst", "q"]);
     public static readonly Method Attack = new(["attack", "普攻", "普通攻击"]);
     public static readonly Method Charge = new(["charge", "重击"]);
@@ -38,7 +37,6 @@ public class Method
         get
         {
             yield return Skill;
-            yield return LongSkill;
             yield return Burst;
             yield return Attack;
             yield return Charge;
