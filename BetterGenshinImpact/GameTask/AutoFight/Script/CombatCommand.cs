@@ -2,6 +2,8 @@
 using BetterGenshinImpact.Helpers;
 using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
+using static BetterGenshinImpact.GameTask.Common.TaskControl;
 using TimeSpan = System.TimeSpan;
 
 namespace BetterGenshinImpact.GameTask.AutoFight.Script;
@@ -100,8 +102,21 @@ public class CombatCommand
     {
         if (Method == Method.Skill)
         {
-            var hold = Args != null && Args.Contains("hold");
-            avatar.UseSkill(hold);
+            avatar.UseSkill();
+        }
+        else if (Method == Method.LongSkill)
+        {
+            if (Args == null)
+            {
+                Logger.LogInformation("未检测到LongSkill方法的参数，将使用默认值");
+                avatar.LongSkill();
+            }
+            else
+            {
+                var s = double.Parse(Args![0]);
+                avatar.LongSkill((int)TimeSpan.FromSeconds(s).TotalMilliseconds);
+            }
+
         }
         else if (Method == Method.Burst)
         {

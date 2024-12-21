@@ -306,9 +306,9 @@ public class Avatar
     }
 
     /// <summary>
-    /// 使用元素战技 E
+    /// 长按元素战技 E
     /// </summary>
-    public void UseSkill(bool hold = false)
+    public void LongSkill(int ms = 1000)
     {
         for (var i = 0; i < 1; i++)
         {
@@ -316,46 +316,59 @@ public class Avatar
             {
                 return;
             }
-
-            if (hold)
+            if (Name == "纳西妲") // 检测纳西妲并特殊处理
             {
-                if (Name == "纳西妲")
+                AutoFightContext.Instance.Simulator.KeyDown(User32.VK.VK_E);
+                Sleep(300, Ct);
+                for (int j = 0; j < 10; j++)
                 {
-                    AutoFightContext.Instance.Simulator.KeyDown(User32.VK.VK_E);
-                    Sleep(300, Ct);
-                    for (int j = 0; j < 10; j++)
-                    {
-                        Simulation.SendInput.Mouse.MoveMouseBy(1000, 0);
-                        Sleep(50); // 持续操作不应该被cts取消
-                    }
-
-                    Sleep(300); // 持续操作不应该被cts取消
-                    AutoFightContext.Instance.Simulator.KeyUp(User32.VK.VK_E);
+                    Simulation.SendInput.Mouse.MoveMouseBy(1000, 0);
+                    Sleep(50); // 持续操作不应该被cts取消
                 }
-                else if (Name == "坎蒂丝")
-                {
-                    AutoFightContext.Instance.Simulator.KeyDown(User32.VK.VK_E);
-                    Thread.Sleep(3000);
-                    AutoFightContext.Instance.Simulator.KeyUp(User32.VK.VK_E);
-                }
-                else
-                {
-                    AutoFightContext.Instance.Simulator.LongKeyPress(User32.VK.VK_E);
-                }
+                Sleep(300); // 持续操作不应该被cts取消
+                AutoFightContext.Instance.Simulator.KeyUp(User32.VK.VK_E);
             }
             else
             {
-                AutoFightContext.Instance.Simulator.KeyPress(User32.VK.VK_E);
+                AutoFightContext.Instance.Simulator.KeyDown(User32.VK.VK_E);
+                Sleep(ms, Ct);
+                AutoFightContext.Instance.Simulator.KeyUp(User32.VK.VK_E);
+                Sleep(200, Ct);
             }
-
+            var region = CaptureToRectArea();
+            ThrowWhenDefeated(region);
+            var cd = GetSkillCurrentCd(region);
+            if (cd > 0 && Name != "纳西妲")
+            {
+                Logger.LogInformation("{Name} 长按元素战技" + ms + "ms，cd:{Cd}", Name, cd);
+                return;
+            }else if (Name == "纳西妲")
+            {
+                Logger.LogInformation("纳西妲特殊元素战技,旋转扫码一周");
+                return;
+            }
+        }
+    }
+    
+    /// <summary>
+    /// 短按元素战技 E
+    /// </summary>
+    public void UseSkill()
+    {
+        for (var i = 0; i < 1; i++)
+        {
+            if (Ct is { IsCancellationRequested: true })
+            {
+                return;
+            }
+            AutoFightContext.Instance.Simulator.KeyPress(User32.VK.VK_E);
             Sleep(200, Ct);
-
             var region = CaptureToRectArea();
             ThrowWhenDefeated(region);
             var cd = GetSkillCurrentCd(region);
             if (cd > 0)
             {
-                Logger.LogInformation(hold ? "{Name} 长按元素战技，cd:{Cd}" : "{Name} 点按元素战技，cd:{Cd}", Name, cd);
+                Logger.LogInformation("{Name} 点按元素战技，cd:{Cd}", Name, cd);
                 // todo 把cd加入执行队列
                 return;
             }
