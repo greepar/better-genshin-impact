@@ -98,10 +98,23 @@ public class CombatCommand
 
     public void Execute(Avatar avatar)
     {
-        if (Method == Method.Skill)
+         if (Method == Method.Skill)
         {
-            var hold = Args != null && Args.Contains("hold");
-            avatar.UseSkill(hold);
+            if (Args == null)
+            {
+                avatar.UseSkill(false);
+            }else if (Args.Count == 1)
+            {
+                var hold = Args.Contains("hold");
+                avatar.UseSkill(hold);
+            }
+            else if (Args.Count == 2)
+            {
+                var hold = Args[0].Contains("hold");
+                var s = double.Parse(Args[1]);
+                avatar.UseSkill(hold,(int)TimeSpan.FromSeconds(s).TotalMilliseconds);
+            }
+
         }
         else if (Method == Method.Burst)
         {
