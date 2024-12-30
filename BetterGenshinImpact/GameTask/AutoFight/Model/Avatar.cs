@@ -313,7 +313,7 @@ public class Avatar
     /// <summary>
     /// 使用元素战技 E
     /// </summary>
-    public void UseSkill(bool hold = false)
+    public void UseSkill(bool hold = false,int ms = 1000)
     {
         for (var i = 0; i < 1; i++)
         {
@@ -345,7 +345,9 @@ public class Avatar
                 }
                 else
                 {
-                    AutoFightContext.Instance.Simulator.LongKeyPress(User32.VK.VK_E);
+                    AutoFightContext.Instance.Simulator.KeyDown(User32.VK.VK_E);
+                    Thread.Sleep(ms);
+                    AutoFightContext.Instance.Simulator.KeyUp(User32.VK.VK_E);
                 }
             }
             else
