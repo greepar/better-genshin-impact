@@ -44,7 +44,7 @@
       "id": 5,
       "x": 219.0625,
       "y": -657.271484375,
-      "type": "target",
+      "type": "path",
       "move_mode": "walk",
       "action": ""
     },
